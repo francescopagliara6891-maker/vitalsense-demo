@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import time
 import plotly.graph_objects as go
 
@@ -18,12 +17,13 @@ st.markdown("""
 # --- SIDEBAR: PROFILO & UPLOAD ---
 st.sidebar.title("🧬 VitalSense AI")
 st.sidebar.caption("Master MADMA Project Work")
+st.sidebar.markdown("**Materia:** Data Driven Organisation")
 st.sidebar.write("---")
 
-# Selezione Utente (Simulazione Persona)
+# Selezione Utente (Simulazione Persona) - AGGIORNATO CON SERENA
 user_type = st.sidebar.selectbox(
     "Seleziona Persona (Target)",
-    ["Francesco (Sportivo Amatoriale)", "Aurora (Focus Benessere)", "Mario (Paziente Cronico)"]
+    ["Francesco (Sportivo Amatoriale)", "Aurora (Focus Benessere)", "Serena (Paziente A Rischio)"]
 )
 
 st.sidebar.subheader("📂 Data Ingestion")
@@ -34,11 +34,12 @@ uploaded_file = st.sidebar.file_uploader("Carica Storia Clinica (PDF/IMG)", type
 def main():
     # Intestazione
     st.markdown("<h1 class='main-header'>VitalSense AI Dashboard</h1>", unsafe_allow_html=True)
-    st.markdown(f"**Benvenuto, {user_type.split()[0]}** | *Digital Twin Status: Active*")
+    st.markdown(f"**Benvenuto/a, {user_type.split()[0]}** | *Digital Twin Status: Active*")
     
     # 1. SEZIONE TEORICA (Qui integreremo i tuoi appunti man mano!)
     with st.expander("ℹ️ Project Framework (Per il Docente)"):
         st.write("""
+        **Materia:** Data Driven Organisation
         **Jobs to be Done:** Trasformare dati clinici statici in sicurezza dinamica.
         **Target:** Sportivi, Pazienti cronici, Health-conscious.
         **Tecnologia:** OCR + NLP + Predictive Algorithms.
@@ -65,7 +66,7 @@ def show_empty_state():
         3. **Calcola** la tua 'Safe Zone' per l'allenamento.
         """)
     with col2:
-        # Un grafico vuoto o statico
+        # Immagine placeholder
         st.image("https://cdn-icons-png.flaticon.com/512/3004/3004458.png", width=150)
 
 def process_data(file, user):
@@ -76,7 +77,8 @@ def process_data(file, user):
     st.success("✅ Analisi Completata! Profilo di Sicurezza Aggiornato.")
     
     # DATI SIMULATI IN BASE ALL'UTENTE
-    if "Mario" in user:
+    # Qui abbiamo aggiornato la logica per "Serena" invece di "Mario"
+    if "Serena" in user:
         risk_score = 85
         status = "⚠️ ATTENZIONE"
         color = "red"
