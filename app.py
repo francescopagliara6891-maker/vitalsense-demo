@@ -15,6 +15,8 @@ st.markdown("""
     .sub-header {font-size: 1.5rem; color: #333;}
     .report-box {padding: 20px; border-radius: 10px; background-color: #f0f2f6; margin-bottom: 20px; border-left: 5px solid #FF4B4B;}
     .success-box {padding: 20px; border-radius: 10px; background-color: #e8fdf5; margin-bottom: 20px; border-left: 5px solid #28a745;}
+    .business-box {padding: 20px; border-radius: 10px; background-color: #fff3cd; margin-bottom: 20px; border-left: 5px solid #ffc107;}
+    .stButton>button {width: 100%;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -35,16 +37,21 @@ user_type = st.sidebar.selectbox(
 st.sidebar.write("---")
 
 # SEZIONE METODOLOGICA (Per l'esame)
-with st.sidebar.expander("📚 Note Metodologiche (Esame)", expanded=True):
+with st.sidebar.expander("📚 Note Metodologiche (Esame)", expanded=False):
     st.markdown("""
     **Strategy:** Lean Startup
     **MVP Type:** Wizard of Oz (Simulazione)
     **Target:** Early Adopters (Curve di Rogers)
     **Goal:** Estrarre Valore da Dati Grezzi
+    **GDPR:** Privacy by Design
     """)
 
 st.sidebar.subheader("📂 Data Ingestion")
 uploaded_file = st.sidebar.file_uploader("Carica Storia Clinica (PDF/IMG)", type=['pdf', 'png', 'jpg'])
+
+# FIRMA D'AUTORE
+st.sidebar.write("---")
+st.sidebar.markdown("Designed & Developed by:  \n**Francesco Pagliara** \n*Master MADMA Student*")
 
 # --- FUNZIONI DI SUPPORTO ---
 
@@ -70,6 +77,14 @@ def generate_fake_history(user_name):
 def main():
     st.markdown("<h1 class='main-header'>VitalSense AI Dashboard</h1>", unsafe_allow_html=True)
     
+    # 1. GDPR / PRIVACY CHECK (Nuova Feature)
+    with st.expander("🔒 Privacy & Consenso Dati (GDPR Compliance)", expanded=True):
+        privacy_check = st.checkbox("Dichiaro di aver letto l'informativa e acconsento al trattamento dei dati sanitari per l'addestramento dell'algoritmo (AI Training).")
+    
+    if not privacy_check:
+        st.warning("⚠️ Per procedere con l'analisi dei dati sensibili è necessario il consenso (Privacy by Design).")
+        st.stop() # Blocca l'app qui
+
     # Header Dinamico basato sul JTBD
     st.markdown(f"""
     <div style='background-color: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 25px;'>
@@ -101,9 +116,11 @@ def show_empty_state():
 def process_data(file, user):
     # Simulazione Processo ETL (Extract, Transform, Load)
     with st.spinner('🔄 Reading Raw Data (OCR)... Extracting Value...'):
-        time.sleep(2) 
+        time.sleep(1.5) 
     
     # Logica differenziata (Data Driven)
+    business_msg = "" # Messaggio economico opzionale
+    
     if "Serena" in user:
         risk_score = 85
         status = "⚠️ ATTENZIONE CLINICA"
@@ -112,6 +129,13 @@ def process_data(file, user):
         action = "⛔ STOP Corsa. ✅ SÌ Camminata veloce (Max 120 bpm)."
         max_bpm = 125
         data_value = "HIGH RISK DETECTED"
+        # Business Value per Serena (Nuova Feature)
+        business_msg = """
+        <div class='business-box'>
+            <h4>💰 Business Insight (Economic Value)</h4>
+            <p>Grazie a questa prevenzione tempestiva, l'algoritmo stima un <b>risparmio sanitario di € 2.500</b> (evitato infortunio/ricovero).</p>
+        </div>
+        """
     elif "Francesco" in user:
         risk_score = 98
         status = "✅ PERFORMANCE MODE"
@@ -147,6 +171,10 @@ def process_data(file, user):
         <p style='font-size: 20px; font-weight: bold;'>👉 Azione Suggerita: {action}</p>
     </div>
     """, unsafe_allow_html=True)
+    
+    # Business Value (Se presente)
+    if business_msg:
+        st.markdown(business_msg, unsafe_allow_html=True)
 
     # Grafici
     c1, c2 = st.columns([1, 1])
@@ -172,6 +200,15 @@ def process_data(file, user):
         fig_line = px.line(df_hist, x='Data', y='Safety Score', markers=True, title=trend_text)
         fig_line.update_traces(line_color='#FF4B4B' if "Serena" in user else '#28a745')
         st.plotly_chart(fig_line, use_container_width=True)
+
+    # 3. FEEDBACK LOOP (Nuova Feature)
+    st.write("---")
+    st.caption("AI Training Loop: Il tuo feedback migliora il modello per tutti gli utenti.")
+    col_f1, col_f2, col_f3 = st.columns([1,1,4])
+    if col_f1.button("👍 Utile"):
+        st.toast("Feedback positivo registrato! Il modello apprenderà da questo pattern.")
+    if col_f2.button("👎 Non Utile"):
+        st.toast("Feedback negativo registrato. I parametri verranno ricalibrati.")
 
 if __name__ == "__main__":
     main()
